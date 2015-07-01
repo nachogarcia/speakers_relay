@@ -1,0 +1,37 @@
+#!/usr/bin/expect
+
+set timeout -1
+log_user 0
+
+trap {send "close\r" 
+        exit} {SIGINT SIGTERM}
+
+spawn -noecho telnet localhost 6600
+gpio mode 5 out
+set gpioPin 5
+expect {
+    "OK MPD" {
+            send "status\r"
+    }
+}
+
+for {} 1 {} {
+	expect {
+		"changed: player" {
+    		    send "status\r"
+		}
+		"state: play" {
+        	exec gpio -g write $gpioPin 0
+    	    send "idle player\r"
+		}
+		"state: pause" {
+	        exec gpio -g write $gpioPin 1
+        	send "idle player\r"
+		}
+		"state: stop" {
+        	exec gpio -g write $gpioPin 1
+        	send "idle player\r"
+		}
+	}
+}
+

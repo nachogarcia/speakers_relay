@@ -1,0 +1,6 @@
+[Unit]
+Description=Relay management to turn speakers on/off
+[Service]
+ExecStart=/usr/bin/expect /etc/Scripts/speakers_relay.exp
+[Install]
+WantedBy=multi-user.target
