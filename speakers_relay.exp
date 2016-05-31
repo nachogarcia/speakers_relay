@@ -7,7 +7,7 @@ trap {send "close\r"
         exit} {SIGINT SIGTERM}
 
 spawn -noecho telnet localhost 6600
-gpio mode 5 out
+exec gpio mode 5 out
 set gpioPin 5
 expect {
     "OK MPD" {
